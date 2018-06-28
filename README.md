@@ -1,6 +1,7 @@
+
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-INDperform <img src="man/figures/Logo.png" align="right"/>
-==========================================================
+INDperform <img src="man/figures/logo.png" align="right" width="100" height="112" />
+====================================================================================
 
 Overview
 --------
@@ -24,6 +25,13 @@ Install the development version from Github using devtools (soon also on CRAN):
 # install.packages("devtools")
 devtools::install_github("saskiaotto/INDperform")
 ```
+
+If you encounter a clear bug, please file a minimal reproducible example on github. For questions email me any time.
+
+Cheatsheet
+----------
+
+<a href="https://raw.githubusercontent.com/saskiaotto/cheatsheets/476bad4a8876939a7b3e1784a5bf61567ed4a715/Cheatsheet_INDperform_v0.1.0.pdf"><img src="man/figures/INDperform_cheatsheet.png" width="900" height="252"/></a>
 
 Usage
 -----
@@ -117,6 +125,21 @@ spie <- plot_spiechart(sum_sc)
 spie$TZA # shows the spiechart of the indicator TZA
 ```
 
+------------------------------------------------------------------------
+
+##### NOTE FOR SPATIAL DATA:
+
+All functions are tailored to indicator time series. **Spatial data** and spatial autocorrelation testing is currently not included. However, if you have spatial data you could still use all functions except for `model_gamm()` as it incorporates only temporal autocorrelation structures (AR and ARMA). Simply do the following and use as `time` vector in `ind_init()` an integer variable with **consecutive** numbers (with no gaps!) representing your different stations.
+
+``` r
+### Use of station numbers instead of time vector
+station_id <- 1:nrow(your_indicator_dfr) 
+dat_init <- ind_init(ind_tbl = your_indicator_dfr,
+  press_tbl = your_pressure_dfr, time = station_id)
+```
+
+------------------------------------------------------------------------
+
 #### Validation of IND performances
 
 ##### Modeling IND trends and responses to single pressures
@@ -176,7 +199,7 @@ This table contains the scores and weights for each (sub-)criterion. It includes
 -   `plot_spiechart()` generates a list of ggplot2 objects (one for each IND). A spie chart superimposes a normal pie chart with a modified polar area chart to permit the comparison of two sets of related data.
 
 <p align="center">
-<img src="man/figures/README_spiechart.png">
+<img src="man/figures/README_spiechart.png" width="400" height="300">
 </p>
 **Examining redundancies and selecting robust indicator suites**
 
@@ -201,6 +224,6 @@ Two approaches based on trajectories in state space to determine the current sta
 Documentation and further information
 -------------------------------------
 
-For guidance on how to apply the functions step-by-step see also the \[INDperform cheatsheet\] (<https://github.com/saskiaotto/cheatsheets/INDperform.pdf>). We are currently working on the Vignette but if you want more information on the framework for quantifying IND performances and its statistical tools implemented in this package see
+For guidance on how to apply the functions step-by-step see also the [INDperform cheatsheet](https://github.com/saskiaotto/cheatsheets/INDperform.pdf). We are currently working on the Vignette but if you want more information on the framework for quantifying IND performances and its statistical tools implemented in this package see
 
 *Otto, S.A., Kadin, M., Casini, M., Torres, M.A., Blenckner, T. (2018): A quantitative framework for selecting and validating food web indicators. Ecological Indicators, 84: 619-631, doi: [https://doi.org/10.1016/j.ecolind.2017.05.045](http://www.sciencedirect.com/science/article/pii/S1470160X1730300X)*
