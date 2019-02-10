@@ -19,7 +19,8 @@
 #' # Using the Baltic Sea demo data
 #' scores_tbl <- scoring(trend_tbl = model_trend_ex,
 #'   mod_tbl = all_results_ex, press_type = press_type_ex)
-#' dist_matrix <- dist_sc(scores_tbl, method_dist = "euclidean")
+#' scores_mat <- summary_sc(scores_tbl)$scores_matrix
+#' dist_matrix <- dist_sc(scores_mat, method_dist = "euclidean")
 #' clust_analysis <- clust_sc(dist_matrix, method_clust = "complete")
 #' plot_clust_sc(clust_analysis)
 #'
@@ -62,10 +63,10 @@ plot_clust_sc <- function(x, rotate = FALSE, text_size = 15) {
 
   p <- ggplot2::ggplot() + ggplot2::geom_blank()
   p <- p + ggplot2::geom_segment(data = ggdendro::segment(data),
-    ggplot2::aes_string(x = "x", y = "y", xend = "xend",
-      yend = "yend"))
-  p <- p + ggplot2::scale_x_continuous(breaks = seq_along(data$labels$label),
-    labels = data$labels$label)
+    ggplot2::aes(x = !!rlang::sym("x"), y = !!rlang::sym("y"),
+    	xend = !!rlang::sym("xend"), yend = !!rlang::sym("yend"))) +
+ 			ggplot2::scale_x_continuous(breaks = seq_along(data$labels$label),
+    	labels = data$labels$label)
   if (rotate) {
     p <- p + ggplot2::coord_flip()
     p <- p + ggplot2::scale_y_continuous()

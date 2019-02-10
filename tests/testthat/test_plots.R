@@ -53,7 +53,11 @@
 # # Test ggcv_plot()
 # t_val <- all_results_ex$thresh_models[[6]][[1]]$t_val
 # gcvv <- all_results_ex$thresh_models[[6]][[1]]$gcvv
-# test_plot_gcvv <- plot_gcvv(t_val, gcvv, all_results_ex$thresh_models[[2]])
+# lab <- all_results_ex$thresh_models[[6]][[1]]
+# min_t_val <- all_results_ex$thresh_models[[6]][[1]]$mr
+# test_plot_gcvv <- plot_gcvv(x_var = t_val, y_var = gcvv,
+# 	lab = lab,	best_t_val = min_t_val)
+#
 #
 #
 # test_that("plot_diagnostics", {
@@ -104,6 +108,8 @@
 #   pred = predict$pred[[1]], ci_up = predict$ci_up[[1]],
 #   ci_low = predict$ci_low[[1]], xlab = "x", ylab = "y",
 #   pos_text = pos_text, label = "Test!")
+#
+# ####check_plot <- test_plot_response
 #
 # # Test plot_predict()
 # x <- c(ind_init_ex$time_train[[1]], ind_init_ex$time_test[[1]])
@@ -204,7 +210,8 @@
 #
 # scores_tbl <- scoring(trend_tbl = model_trend_ex, mod_tbl = all_results_ex,
 #   press_type = INDperform::press_type_ex)
-# dist_matrix <- dist_sc(scores_tbl, method_dist = "euclidean")
+# summary_tbl <- summary_sc(scores_tbl)
+# dist_matrix <- dist_sc(summary_tbl[[3]], method_dist = "euclidean")
 # clust_obj <- suppressMessages(clust_sc(dist_matrix,
 #   method_clust = "complete"))
 # test_plot_dendrogram <- plot_clust_sc(clust_obj)

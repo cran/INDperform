@@ -52,8 +52,8 @@ select_interaction <- function(mod_tbl) {
 
   # Create each possible combination for all
   # pressures
-  pressures <- unique(mod_tbl$press) %>% merge(.,
-    .)
+  pressures <- expand.grid(unique(mod_tbl$press), unique(mod_tbl$press))
+
   names(pressures) <- c("t_var", "press")
   # Remove combinations of where t_var = pressures
   pressures <- pressures[pressures$t_var != pressures$press,
@@ -68,8 +68,7 @@ select_interaction <- function(mod_tbl) {
   pressures <- suppressMessages(dplyr::left_join(mod_tbl[,
     c("ind", "press")], pressures))
   # Sort columns
-  pressures <- dplyr::select_(pressures, "ind", "press",
-    "t_var")
+  pressures <- pressures[ , c("ind", "press", "t_var")]
 
 
   return(pressures)

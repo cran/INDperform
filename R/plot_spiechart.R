@@ -111,8 +111,9 @@ plot_spiechart <- function(summary_tbl, col_press_type = NULL,
 
   # Order pressure-specific summary by ind,
   # press_type and then press
-  summary_tbl[[2]] <- summary_tbl[[2]] %>% dplyr::arrange_("ind",
-    "press_type", "press")
+  summary_tbl[[2]] <- summary_tbl[[2]] %>%
+  dplyr::arrange(!!!rlang::syms(c("ind",
+    "press_type", "press")))
 
   # Split summary_tbl by indicators
   split_input <- purrr::map(summary_tbl[[1]]$ind,
@@ -188,7 +189,7 @@ plot_spiechart <- function(summary_tbl, col_press_type = NULL,
     axis.text.y = ggplot2::element_blank(), axis.text.x = ggplot2::element_blank())
 
   p <- purrr::map2(split_input, summary_tbl[[1]]$ind,
-    ~plot_spie(.x, scale, parting, cat, summary_tbl[[1]],
+    ~ plot_spie(split_input = .x, scale, parting, cat, summary_tbl[[1]],
       ground, n_c8_c11, n_c9_c10, col_crit8_11,
       x_ring1, theme_infog, ind = .y, lab_size = lab_size,
       title_size = title_size))

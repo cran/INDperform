@@ -83,7 +83,6 @@
 #' gamm_tbl <- model_gamm(dat_init, filter = gam_tbl$tac)
 model_gamm <- function(init_tbl, k = 5, family = stats::gaussian(),
   excl_outlier = NULL, filter = NULL) {
-  # init_tbl = dat_init
 
   # Data input validation ---------------------
   if (missing(init_tbl)) {
@@ -265,14 +264,13 @@ model_gamm <- function(init_tbl, k = 5, family = stats::gaussian(),
       "ar1", "ar2", "arma11", "arma12", "arma21"),
       length.out = length(temp_mod$result)),
       model = temp_mod$result) %>% dplyr::left_join(init_tbl[,
-      1:3], by = "id") %>% dplyr::arrange_(~id)
+      1:3], by = "id") %>% dplyr::arrange(!!rlang::sym("id"))
 
     # Add model_type
     gamm_tab$model_type <- "gamm"
     # Rearrange columns
-    gamm_tab <- dplyr::select_(gamm_tab, .dots = c("id",
-      "ind", "press", "model_type", "corrstruc",
-      "model"))
+    gamm_tab <- gamm_tab[, c("id", "ind", "press",
+      "model_type", "corrstruc", "model")]
 
     # Save summary for each gam (cannot handle NAs,
     # hence use of possibly())
@@ -301,8 +299,9 @@ model_gamm <- function(init_tbl, k = 5, family = stats::gaussian(),
     # Calculate nrmse using external helper function
     dummy <- dplyr::left_join(gamm_tab, init_tbl,
       by = c("press", "ind", "id"))
-    gamm_tab$nrmse <- calc_nrmse(pred = calc_pred(model_list = dummy$model,
-      obs_press = dummy$press_test)$pred, obs_ind = dummy$ind_test)
+    gamm_tab$nrmse <- calc_nrmse(
+    	press = dummy$press_test, ind = dummy$ind_test,
+    	model = dummy$model)
 
     # Get residuals (cannot handle NAs, hence use of
     # possibly())
