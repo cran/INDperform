@@ -24,8 +24,12 @@
 #
 # # Test helper_plot_diagnostics functions: ---------
 #
+# title_test <- "Sprat ~ Tsum \n (GAM)"
+#
 # # Test plot_cook()
-# test_plot_cook <- plot_cook(cooks_dist_gamm(gamm_model = model_gamm_ex$model[[1]]$gam))
+# test_plot_cook <- plot_cook(
+# 	values = cooks_dist_gamm(gamm_model = model_gamm_ex$model[[1]]$gam),
+# 	title = title_test)
 #
 # # Test plot_tac()
 # resid <- mgcv::residuals.gam(all_results_ex$model[[1]])
@@ -34,12 +38,12 @@
 # acf_lag <- as.vector(stats::acf(resid, na.action = stats::na.pass,
 #   plot = FALSE)$lag)
 # acf <- test_tac(model_resid = list(resid))$acf[[1]]
-# test_plot_tac <- plot_acf(acf_lag, acf)
+# test_plot_tac <- plot_acf(acf_lag, acf, title = title_test)
 #
 # # Test plot_resid()
 # pred <- calc_pred(all_results_ex$model[1], ind_init_ex$press_train[1])$pred[[1]]
 # test_plot_resid <- plot_resid(model_resid = resid,
-#   model_fitted = pred)
+#   model_fitted = pred, title = title_test)
 #
 # # Test plot_qq() quan_normal <- quantile(x =
 # # rnorm(length(resid))) -> if i run this I would
@@ -48,7 +52,7 @@
 # theo_quan <- seq(from = -2.0533143, to = 2.0820291,
 #   by = (2.0820291 + 2.0533143)/(length(resid) - 1))
 # # (seq from min to max)
-# test_plot_qq <- plot_qq(resid, theo_quan)
+# test_plot_qq <- plot_qq(resid, theo_quan, title = title_test)
 #
 # # Test ggcv_plot()
 # t_val <- all_results_ex$thresh_models[[6]][[1]]$t_val
@@ -56,7 +60,7 @@
 # lab <- all_results_ex$thresh_models[[6]][[1]]
 # min_t_val <- all_results_ex$thresh_models[[6]][[1]]$mr
 # test_plot_gcvv <- plot_gcvv(x_var = t_val, y_var = gcvv,
-# 	lab = lab,	best_t_val = min_t_val)
+# 	lab = lab,	best_t_val = min_t_val, title = title_test)
 #
 #
 #
@@ -77,16 +81,21 @@
 # # Test helper function for plot_trend() ---------
 # time <- model_trend_ex$time_train[[1]]
 # ind <- model_trend_ex$ind_train[[1]]
-# pred <- model_trend_ex$pred[[1]]
-# ci_up <- model_trend_ex$ci_up[[1]]
-# ci_low <- model_trend_ex$ci_low[[1]]
+# time_seq <- seq(min(time), max(time), length.out = 100)
+# pred <- calc_pred(
+# 	model_trend_ex$model[1],
+# 	obs_press = list(time_seq)
+# 	)
+# pred_seq <- pred$pred[[1]]
+# ci_up_seq <- pred$ci_up[[1]]
+# ci_low_seq <- pred$ci_low[[1]]
 # x_range <- range(time)
-# y_range <- range(c(ind, pred, ci_up, ci_low), na.rm = TRUE)
+# y_range <- range(c(ind, pred_seq, ci_up_seq, ci_low_seq), na.rm = TRUE)
 # pos_text <- place_text(x = x_range, y = y_range, x_prop = 0,
 #   y_prop = 0.1, pos = "topleft")
 #
-# trend_plot <- plot_helper(time, ind, pred, ci_up, ci_low,
-#   ylab = "y", pos_text, label = "Test!")
+# trend_plot <- plot_helper(time, ind, time_seq, pred_seq,
+#   ci_up_seq, ci_low_seq, ylab = "y", pos_text, label = "Test!")
 #
 # test_that("plot_trend", {
 #   vdiffr::expect_doppelganger("plot trend", trend_plot)
